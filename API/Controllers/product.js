@@ -1,22 +1,29 @@
 import { Products } from "../Models/Product.js";
 
 //add product
-export const addProduct = async(req,res) => {
-    try {
-    const { title,description,price,category,qty,imgSrc } = req.body
-    let product = await Products.create({
-        title,
-        description,
-        price,
-        category,
-        qty,
-        imgSrc
-    })
-    res.json({message:"Product added successfully...!", success:true, product})
+export const addProduct = async (req, res) => {
+
+        console.log(req.body); // Log the incoming request body
+        const { title, description, price, category, qty, imgSrc } = req.body;
+        if(!title || !description || !price || !category || !qty || !imgSrc) {
+            return res.status(400).json({ message:'All fields are required' })
+        }
+        try {
+        let product = await Products.create({
+            title,
+            description,
+            price,
+            category,
+            qty,
+            imgSrc
+        });
+
+        res.json({ message: "Product added successfully...!", success: true, product });
     } catch (error) {
-        res.json(error.message) 
+        console.error(error); // Log the error
+        res.status(400).json({ message: error.message });
     }
-} 
+};
 
 //get products
 export const getProducts = async(req,res) => {
